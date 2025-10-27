@@ -1,0 +1,11 @@
+[SOFTWARE]
+registered_to = Your Organization Name
+produced_by = Odysseus-imc Pty Ltd
+Copyright = 2025 Odysseus-imc Pty Ltd
+software_name = ASAP CAPEX Planning System
+version = 1.0 (Beta)
+
+[DISPLAY]
+show_registration = true
+show_producer = true
+show_version = true

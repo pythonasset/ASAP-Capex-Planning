@@ -1,0 +1,4 @@
+asset_code,asset_class,asset_type,description,project_scope,design_status,env_status,whs_score,water_score,customer_score,maintenance_score,financial_score
+CD-2-001,Bridges & Culverts,Road Bridge,Main road bridge over river,Bridge deck replacement and structural repairs,To be assigned,Pending,25,5,20,8,7
+CD-2-002,Bridges & Culverts,Railway Bridge,Railway crossing bridge,Bridge inspection and maintenance,Under Development,Pending,15,10,15,6,5
+PS-1-001,Pump Stations & Facilities,Water Pump Station,Primary water pumping facility,Pump upgrade and efficiency improvements,For Review,Complete,20,18,25,9,8
