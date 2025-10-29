@@ -2,6 +2,8 @@
 
 A comprehensive Capital Expenditure (CAPEX) planning and management dashboard built with Streamlit.
 
+**Capital Works Planning from creation to Approval**
+
 ## Features
 
 ### 📊 **Dashboard & Analytics**
@@ -183,4 +185,4 @@ For technical support or questions:
 
 **Registered to**: [Your Organization Name]  
 **Produced by**: Odysseus-imc Pty Ltd  
-**Version**: 1.0 (Beta)# Capex-Planning
+**Version**: 1.0 (Beta)

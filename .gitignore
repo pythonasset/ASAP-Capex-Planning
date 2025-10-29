@@ -30,21 +30,61 @@ ENV/
 env.bak/
 venv.bak/
 
-# Database files
+# PyCharm
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Database
 *.db
 *.sqlite
 *.sqlite3
 capex_planning.db
-capex_data.db
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+# CSV and Excel files (optional - remove if you want to track them)
+*.csv
+*.xlsx
+*.xls
 
-# OS
+# Config files with sensitive data
+config_production.ini
+config_local.ini
+
+# Output directory
+output/
+exports/
+reports/
+
+# Streamlit
+.streamlit/
+
+# Operating system files
 .DS_Store
 .DS_Store?
 ._*
@@ -53,31 +93,40 @@ capex_data.db
 ehthumbs.db
 Thumbs.db
 
-# Streamlit
-.streamlit/
-
-# Logs
-*.log
-
 # Temporary files
 *.tmp
-*.bak
-*_backup.*
-
-# Data files (exclude actual data but keep templates)
-*.xlsx
-*.xls
-*.csv
-!project_import_template.xlsx
-!sample_correct_columns.csv
-!sample_wrong_columns.csv
+*.temp
+*.swp
+*.swo
+*~
 
 # Backup files
-*_backup.py
+*.bak
+*.backup
 
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+
+# Dependencies
+node_modules/
+
+# Package files
+*.deb
+*.rpm
+*.msi
+*.dmg
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Documentation
+docs/_build/
+
+# Misc
+.cache/
+*.lock
