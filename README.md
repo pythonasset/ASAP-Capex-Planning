@@ -2,7 +2,7 @@
 
 A comprehensive Capital Expenditure (CAPEX) planning and management dashboard built with Streamlit.
 
-**Capital Works Planning from creation to Approval**
+## Capital Works Planning from creation to Approval
 
 ## Features
 
