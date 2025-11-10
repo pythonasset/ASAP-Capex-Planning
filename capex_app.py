@@ -10,6 +10,63 @@ import zipfile
 from pathlib import Path
 import configparser
 
+# Database error handling and connection management
+def get_db_connection():
+    """Get database connection with proper error handling"""
+    try:
+        conn = sqlite3.connect('capex_planning.db')
+        # Enable foreign key constraints
+        conn.execute("PRAGMA foreign_keys = ON")
+        return conn
+    except sqlite3.Error as e:
+        st.error(f"Database connection error: {e}")
+        return None
+
+def execute_db_query(query, params=None, fetch=None):
+    """Execute database query with comprehensive error handling"""
+    try:
+        conn = get_db_connection()
+        if conn is None:
+            return None
+            
+        cursor = conn.cursor()
+        
+        if params:
+            cursor.execute(query, params)
+        else:
+            cursor.execute(query)
+        
+        if fetch == 'all':
+            result = cursor.fetchall()
+        elif fetch == 'one':
+            result = cursor.fetchone()
+        else:
+            result = None
+            
+        # Only commit if it's a modification query
+        if query.strip().upper().startswith(('INSERT', 'UPDATE', 'DELETE')):
+            conn.commit()
+            
+        conn.close()
+        return result
+        
+    except sqlite3.IntegrityError as e:
+        st.error(f"Database integrity error: {str(e)}")
+        st.info("This may be due to duplicate entries or invalid references. Please check your data and try again.")
+        if 'conn' in locals() and conn:
+            conn.close()
+        return None
+    except sqlite3.Error as e:
+        st.error(f"Database error: {str(e)}")
+        if 'conn' in locals() and conn:
+            conn.close()
+        return None
+    except Exception as e:
+        st.error(f"Unexpected error: {str(e)}")
+        if 'conn' in locals() and conn:
+            conn.close()
+        return None
+
 # Configuration reader
 def read_config():
     """Read configuration from config.ini file"""
@@ -66,6 +123,58 @@ def format_dataframe_dates(df, date_columns):
         if col in df_formatted.columns:
             df_formatted[col] = df_formatted[col].apply(format_date)
     return df_formatted
+
+# Database maintenance and integrity checks
+def check_database_integrity():
+    """Check and maintain database integrity"""
+    try:
+        conn = get_db_connection()
+        if conn is None:
+            return False
+            
+        cursor = conn.cursor()
+        
+        # Check for foreign key violations
+        cursor.execute("PRAGMA foreign_key_check")
+        violations = cursor.fetchall()
+        
+        if violations:
+            st.warning(f"Found {len(violations)} database integrity issues. Attempting to fix...")
+            
+            # Fix orphaned priority_score records
+            cursor.execute("""
+                DELETE FROM priority_score 
+                WHERE asset_id NOT IN (SELECT asset_id FROM asset)
+                AND asset_id IS NOT NULL
+            """)
+            
+            # Fix other potential issues
+            cursor.execute("""
+                DELETE FROM project_year_cost 
+                WHERE project_id NOT IN (SELECT project_id FROM project)
+                AND project_id IS NOT NULL
+            """)
+            
+            cursor.execute("""
+                DELETE FROM risk_assessment 
+                WHERE project_id NOT IN (SELECT project_id FROM project)
+                AND project_id IS NOT NULL
+            """)
+            
+            conn.commit()
+            st.success("Database integrity issues fixed!")
+        
+        # Optimize database
+        cursor.execute("ANALYZE")
+        conn.commit()
+        conn.close()
+        return True
+        
+    except Exception as e:
+        st.error(f"Database integrity check failed: {e}")
+        if 'conn' in locals() and conn:
+            conn.close()
+        return False
 
 # Database initialization
 def init_database():
@@ -535,6 +644,12 @@ def import_projects_from_spreadsheet(uploaded_file, conn, overwrite_existing=Fal
 
 # Streamlit App
 st.set_page_config(page_title="ASAP CAPEX Planning", layout="wide", page_icon="📊")
+
+# Initialize database and check integrity
+if 'db_initialized' not in st.session_state:
+    init_database()
+    check_database_integrity()
+    st.session_state.db_initialized = True
 
 # Custom CSS to change tab focus color from red to yellow
 st.markdown("""
